@@ -1,0 +1,114 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #dcdfe6;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f5f7fa;
+}
+
+// 通用样式
+.page-container {
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 60px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-form {
+  margin-bottom: 20px;
+}
+
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+// 状态标签颜色
+.status-tag {
+  &.success {
+    background-color: #f0f9eb;
+    color: #67c23a;
+  }
+  &.warning {
+    background-color: #fdf6ec;
+    color: #e6a23c;
+  }
+  &.danger {
+    background-color: #fef0f0;
+    color: #f56c6c;
+  }
+  &.info {
+    background-color: #f4f4f5;
+    color: #909399;
+  }
+}
+
+// 表格操作按钮
+.table-actions {
+  .el-button {
+    padding: 4px 8px;
+    margin-left: 4px;
+  }
+}
+
+// 富文本内容样式
+.rich-content {
+  line-height: 1.8;
+  
+  p {
+    margin-bottom: 10px;
+  }
+  
+  img {
+    max-width: 100%;
+  }
+}
+
+// 统计卡片样式
+.stat-card {
+  text-align: center;
+  padding: 20px;
+  
+  .stat-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #409eff;
+    margin-bottom: 10px;
+  }
+  
+  .stat-label {
+    font-size: 14px;
+    color: #909399;
+  }
+}
+
+// 表单样式
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
