@@ -32,14 +32,16 @@ public class FileService {
         }
 
         try {
+            // 获取绝对路径
+            Path baseDir = Paths.get(uploadPath).toAbsolutePath().normalize();
+            
             // 生成文件存储路径（按日期分目录）
             String dateDir = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            String dirPath = uploadPath + "/" + dateDir;
+            Path fullDirPath = baseDir.resolve(dateDir);
             
             // 创建目录
-            Path directory = Paths.get(dirPath);
-            if (!Files.exists(directory)) {
-                Files.createDirectories(directory);
+            if (!Files.exists(fullDirPath)) {
+                Files.createDirectories(fullDirPath);
             }
 
             // 生成新文件名
@@ -51,14 +53,15 @@ public class FileService {
             String newFilename = UUID.randomUUID().toString().replace("-", "") + extension;
 
             // 保存文件
-            Path filePath = Paths.get(dirPath, newFilename);
-            file.transferTo(filePath.toFile());
+            Path filePath = fullDirPath.resolve(newFilename);
+            file.transferTo(filePath.toAbsolutePath().toFile());
 
-            // 返回相对路径
+            // 返回前端访问路径（带 /api/uploads/ 前缀，匹配 WebConfig 配置）
             String relativePath = "/uploads/" + dateDir + "/" + newFilename;
             return Result.success("上传成功", relativePath);
 
         } catch (IOException e) {
+            e.printStackTrace();
             return Result.error("文件上传失败：" + e.getMessage());
         }
     }
@@ -94,9 +97,14 @@ public class FileService {
         }
 
         try {
-            // 转换为实际路径
-            String actualPath = filePath.replace("/uploads/", uploadPath + "/");
-            File file = new File(actualPath);
+            // 获取绝对路径
+            Path baseDir = Paths.get(uploadPath).toAbsolutePath().normalize();
+            
+            // 转换为实际物理路径
+            String relativePath = filePath.replace("/uploads/", "");
+            Path actualPath = baseDir.resolve(relativePath);
+            
+            File file = actualPath.toFile();
             
             if (file.exists()) {
                 if (file.delete()) {
@@ -108,6 +116,7 @@ public class FileService {
                 return Result.error("文件不存在");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.error("删除失败：" + e.getMessage());
         }
     }

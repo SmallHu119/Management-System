@@ -17,7 +17,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 配置上传文件的访问路径
+        String absolutePath = new java.io.File(uploadPath).getAbsolutePath();
+        if (!absolutePath.endsWith(java.io.File.separator)) {
+            absolutePath += java.io.File.separator;
+        }
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadPath + "/");
+                .addResourceLocations("file:" + absolutePath);
     }
 }
