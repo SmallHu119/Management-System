@@ -53,6 +53,7 @@ public class FileService {
             String newFilename = UUID.randomUUID().toString().replace("-", "") + extension;
 
             // 保存文件
+            // 保存文件到指定路径
             Path filePath = fullDirPath.resolve(newFilename);
             file.transferTo(filePath.toAbsolutePath().toFile());
 
