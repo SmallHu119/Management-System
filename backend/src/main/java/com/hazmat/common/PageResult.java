@@ -1,6 +1,7 @@
 package com.hazmat.common;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -12,6 +13,12 @@ import java.util.List;
 public class PageResult<T> {
     
     private List<T> records;
+    
+    @JsonProperty("list")
+    public List<T> getList() {
+        return records;
+    }
+
     private Long total;
     private Long size;
     private Long current;

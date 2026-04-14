@@ -1,152 +1,933 @@
-import request from '@/utils/request'
+/**
+ * 监测预警模块 - API 接口定义
+ * 
+ * 统一使用 request 工具发送请求，所有接口均返回 Promise
+ */
+import request from './request'
 
-// ==================== 认证相关 ====================
+// ==================== 认证模块 API ====================
+
 export const authApi = {
-  login: (data) => request.post('/auth/login', data),
-  register: (data) => request.post('/auth/register', data),
-  logout: () => request.post('/auth/logout'),
-  changePassword: (data) => request.post('/auth/change-password', data),
-  getUserInfo: () => request.get('/auth/info')
+  /** 用户登录 */
+  login(data) {
+    return request({
+      url: '/auth/login',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 用户注册 */
+  register(data) {
+    return request({
+      url: '/auth/register',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 修改密码 */
+  changePassword(data) {
+    return request({
+      url: '/auth/change-password',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 获取用户信息 */
+  getUserInfo() {
+    return request({
+      url: '/auth/user-info',
+      method: 'get'
+    })
+  }
 }
 
-// ==================== 用户管理 ====================
+// ==================== 用户管理 API ====================
+
 export const userApi = {
-  // 普通员工
-  getUserList: (params) => request.get('/user/list', { params }),
-  getUserById: (id) => request.get(`/user/${id}`),
-  updateUser: (data) => request.put('/user', data),
-  deleteUser: (id) => request.delete(`/user/${id}`),
-  updateUserStatus: (id, status) => request.put(`/user/${id}/status/${status}`),
-  resetUserPassword: (id, password) => request.put(`/user/${id}/reset-password`, null, { params: { newPassword: password } }),
+  /** 获取用户列表 */
+  getUserList(params) {
+    return request({
+      url: '/user/list',
+      method: 'get',
+      params
+    })
+  },
   
-  // 安全管理员
-  getSafetyAdminList: (params) => request.get('/user/safety-admin/list', { params }),
-  getSafetyAdminById: (id) => request.get(`/user/safety-admin/${id}`),
-  addSafetyAdmin: (data) => request.post('/user/safety-admin', data),
-  updateSafetyAdmin: (data) => request.put('/user/safety-admin', data),
-  deleteSafetyAdmin: (id) => request.delete(`/user/safety-admin/${id}`),
-  updateSafetyAdminStatus: (id, status) => request.put(`/user/safety-admin/${id}/status/${status}`),
-  resetSafetyAdminPassword: (id, password) => request.put(`/user/safety-admin/${id}/reset-password`, null, { params: { newPassword: password } }),
+  /** 获取用户详情 */
+  getUserById(id) {
+    return request({
+      url: `/user/${id}`,
+      method: 'get'
+    })
+  },
   
-  // 系统管理员
-  getAdminById: (id) => request.get(`/user/admin/${id}`),
-  updateAdmin: (data) => request.put('/user/admin', data)
+  /** 创建用户 */
+  createUser(data) {
+    return request({
+      url: '/user',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新用户 */
+  updateUser(data) {
+    return request({
+      url: '/user',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除用户 */
+  deleteUser(id) {
+    return request({
+      url: `/user/${id}`,
+      method: 'delete'
+    })
+  }
 }
 
-// ==================== 危化品管理 ====================
-export const hazmatApi = {
-  // 类别
-  getAllCategories: () => request.get('/hazmat/category/all'),
-  getCategoryList: (params) => request.get('/hazmat/category/list', { params }),
-  getCategoryById: (id) => request.get(`/hazmat/category/${id}`),
-  addCategory: (data) => request.post('/hazmat/category', data),
-  updateCategory: (data) => request.put('/hazmat/category', data),
-  deleteCategory: (id) => request.delete(`/hazmat/category/${id}`),
-  
-  // 危化品信息
-  getHazmatList: (params) => request.get('/hazmat/info/list', { params }),
-  getAllHazmats: () => request.get('/hazmat/info/all'),
-  getHazmatById: (id) => request.get(`/hazmat/info/${id}`),
-  addHazmat: (data) => request.post('/hazmat/info', data),
-  updateHazmat: (data) => request.put('/hazmat/info', data),
-  deleteHazmat: (id) => request.delete(`/hazmat/info/${id}`),
-  
-  // 统计
-  countHazmats: () => request.get('/hazmat/count'),
-  countByCategory: () => request.get('/hazmat/count-by-category')
-}
+// ==================== 仪表盘 API ====================
 
-// ==================== 安全检查 ====================
-export const checkApi = {
-  // 检查计划
-  getPlanList: (params) => request.get('/check/plan/list', { params }),
-  getPendingPlans: () => request.get('/check/plan/pending'),
-  getPlanById: (id) => request.get(`/check/plan/${id}`),
-  addPlan: (data) => request.post('/check/plan', data),
-  updatePlan: (data) => request.put('/check/plan', data),
-  deletePlan: (id) => request.delete(`/check/plan/${id}`),
-  updatePlanStatus: (id, status) => request.put(`/check/plan/${id}/status/${status}`),
-  
-  // 检查记录
-  getRecordList: (params) => request.get('/check/record/list', { params }),
-  getRecordById: (id) => request.get(`/check/record/${id}`),
-  addRecord: (data) => request.post('/check/record', data),
-  updateRecord: (data) => request.put('/check/record', data),
-  deleteRecord: (id) => request.delete(`/check/record/${id}`),
-  auditRecord: (id, status) => request.put(`/check/record/${id}/audit/${status}`),
-  
-  // 统计
-  countPlans: () => request.get('/check/plan/count'),
-  countRecords: () => request.get('/check/record/count')
-}
-
-// ==================== 隐患管理 ====================
-export const hazardApi = {
-  getHazardList: (params) => request.get('/hazard/list', { params }),
-  getMyHazards: (params) => request.get('/hazard/my', { params }),
-  getPendingHazards: () => request.get('/hazard/pending'),
-  getHazardById: (id) => request.get(`/hazard/${id}`),
-  reportHazard: (data) => request.post('/hazard', data),
-  updateHazard: (data) => request.put('/hazard', data),
-  deleteHazard: (id) => request.delete(`/hazard/${id}`),
-  handleHazard: (id, data) => request.post(`/hazard/${id}/handle`, null, { params: data }),
-  countHazards: () => request.get('/hazard/count'),
-  countPendingHazards: () => request.get('/hazard/count/pending')
-}
-
-// ==================== 安全知识 ====================
-export const knowledgeApi = {
-  getKnowledgeList: (params) => request.get('/knowledge/list', { params }),
-  getPublishedKnowledge: (params) => request.get('/knowledge/published', { params }),
-  getKnowledgeById: (id) => request.get(`/knowledge/${id}`),
-  addKnowledge: (data) => request.post('/knowledge', data),
-  updateKnowledge: (data) => request.put('/knowledge', data),
-  deleteKnowledge: (id) => request.delete(`/knowledge/${id}`),
-  publishKnowledge: (id, status) => request.put(`/knowledge/${id}/publish/${status}`),
-  getHotKnowledge: (limit) => request.get('/knowledge/hot', { params: { limit } }),
-  getLatestKnowledge: (limit) => request.get('/knowledge/latest', { params: { limit } }),
-  countKnowledge: () => request.get('/knowledge/count')
-}
-
-// ==================== 公告管理 ====================
-export const announcementApi = {
-  getAnnouncementList: (params) => request.get('/announcement/list', { params }),
-  getPublishedAnnouncements: (params) => request.get('/announcement/published', { params }),
-  getAnnouncementById: (id) => request.get(`/announcement/${id}`),
-  addAnnouncement: (data) => request.post('/announcement', data),
-  updateAnnouncement: (data) => request.put('/announcement', data),
-  deleteAnnouncement: (id) => request.delete(`/announcement/${id}`),
-  publishAnnouncement: (id, status) => request.put(`/announcement/${id}/publish/${status}`),
-  getLatestAnnouncements: (limit) => request.get('/announcement/latest', { params: { limit } }),
-  getSystemIntro: () => request.get('/announcement/intro'),
-  countAnnouncements: () => request.get('/announcement/count')
-}
-
-// ==================== 首页统计 ====================
 export const dashboardApi = {
-  getStats: () => request.get('/dashboard/stats'),
-  getLatestAnnouncements: () => request.get('/dashboard/announcements'),
-  getPendingHazards: () => request.get('/dashboard/pending-hazards'),
-  getPendingPlans: () => request.get('/dashboard/pending-plans'),
-  getHotKnowledge: () => request.get('/dashboard/hot-knowledge'),
-  getHazmatByCategory: () => request.get('/dashboard/hazmat-by-category')
+  /** 获取仪表盘统计数据 */
+  getStats() {
+    return request({
+      url: '/dashboard/stats',
+      method: 'get'
+    })
+  },
+  
+  /** 获取最新公告 */
+  getLatestAnnouncements() {
+    return request({
+      url: '/dashboard/announcements',
+      method: 'get'
+    })
+  },
+  
+  /** 获取热门安全知识 */
+  getHotKnowledge() {
+    return request({
+      url: '/dashboard/hot-knowledge',
+      method: 'get'
+    })
+  },
+  
+  /** 获取待处理隐患 */
+  getPendingHazards() {
+    return request({
+      url: '/dashboard/pending-hazards',
+      method: 'get'
+    })
+  },
+  
+  /** 获取待处理检查计划 */
+  getPendingPlans() {
+    return request({
+      url: '/dashboard/pending-plans',
+      method: 'get'
+    })
+  },
+  
+  /** 获取危化品分类统计 */
+  getHazmatByCategory() {
+    return request({
+      url: '/dashboard/hazmat-by-category',
+      method: 'get'
+    })
+  }
 }
 
-// ==================== 文件上传 ====================
-export const fileApi = {
-  uploadFile: (file) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    return request.post('/file/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+// ==================== 监测预警模块 API ====================
+
+export const monitoringApi = {
+  // ========== 实时监测数据 ==========
+  
+  /** 获取实时监测数据列表（分页） */
+  getMonitoringData(params) {
+    return request({
+      url: '/monitoring/realtime/list',
+      method: 'get',
+      params
     })
   },
-  uploadImage: (file) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    return request.post('/file/upload/image', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+  
+  /** 获取最新监测数据（概览页用） */
+  getLatestMonitoringData() {
+    return request({
+      url: '/monitoring/realtime/latest',
+      method: 'get'
     })
   },
-  deleteFile: (filePath) => request.delete('/file', { params: { filePath } })
+  
+  /** 获取当前监测数据（实时） */
+  getCurrentMonitoringData() {
+    return request({
+      url: '/monitoring/realtime/current',
+      method: 'get'
+    })
+  },
+  
+  /** 根据ID获取监测数据详情 */
+  getMonitoringDataById(id) {
+    return request({
+      url: `/monitoring/realtime/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 添加监测数据 */
+  addMonitoringData(data) {
+    return request({
+      url: '/monitoring/realtime',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新监测数据 */
+  updateMonitoringData(data) {
+    return request({
+      url: '/monitoring/realtime',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除监测数据 */
+  deleteMonitoringData(id) {
+    return request({
+      url: `/monitoring/realtime/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  /** 获取监测数据趋势 */
+  getMonitoringTrend(hazmatId, paramId, timeRange) {
+    return request({
+      url: '/monitoring/realtime/trend',
+      method: 'get',
+      params: { hazmatId, paramId, timeRange }
+    })
+  },
+  
+  // ========== 预警记录 ==========
+  
+  /** 获取所有预警记录 */
+  getAllWarningRecords() {
+    return request({
+      url: '/warning/record/all',
+      method: 'get'
+    })
+  },
+  
+  /** 获取预警记录列表（分页） */
+  getWarningRecords(params) {
+    return request({
+      url: '/warning/record/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取未处理的预警记录 */
+  getUnhandledWarningRecords() {
+    return request({
+      url: '/warning/record/unhandled',
+      method: 'get'
+    })
+  },
+  
+  /** 根据ID获取预警记录详情 */
+  getWarningRecordById(id) {
+    return request({
+      url: `/warning/record/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 获取预警详情(含趋势数据) */
+  getWarningDetail(id) {
+    return request({
+      url: `/warning/record/detail/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 添加预警记录 */
+  addWarningRecord(data) {
+    return request({
+      url: '/warning/record',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 处理预警记录 */
+  handleWarningRecord(id, data) {
+    return request({
+      url: `/warning/record/handle/${id}`,
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 关闭预警记录 */
+  closeWarningRecord(id) {
+    return request({
+      url: `/warning/record/close/${id}`,
+      method: 'put'
+    })
+  },
+  
+  /** 删除预警记录 */
+  deleteWarningRecord(id) {
+    return request({
+      url: `/warning/record/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  /** 统计预警记录数量 */
+  countWarningRecords(params) {
+    return request({
+      url: '/warning/record/count',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 按预警级别统计 */
+  countByWarningLevel() {
+    return request({
+      url: '/warning/record/count-by-level',
+      method: 'get'
+    })
+  },
+  
+  /** 获取预警统计数据 */
+  getWarningStatistics() {
+    return request({
+      url: '/warning/record/statistics',
+      method: 'get'
+    })
+  },
+  
+  // ========== 预警规则 ==========
+  
+  /** 获取所有预警规则 */
+  getAllWarningRules() {
+    return request({
+      url: '/warning/rule/all',
+      method: 'get'
+    })
+  },
+  
+  /** 获取预警规则列表（分页） */
+  getWarningRules(params) {
+    return request({
+      url: '/warning/rule/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 根据危化品ID获取预警规则 */
+  getWarningRulesByHazmatId(hazmatId) {
+    return request({
+      url: `/warning/rule/by-hazmat/${hazmatId}`,
+      method: 'get'
+    })
+  },
+  
+  /** 根据ID获取预警规则详情 */
+  getWarningRuleById(id) {
+    return request({
+      url: `/warning/rule/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 添加预警规则 */
+  addWarningRule(data) {
+    return request({
+      url: '/warning/rule',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新预警规则 */
+  updateWarningRule(data) {
+    return request({
+      url: '/warning/rule',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除预警规则 */
+  deleteWarningRule(id) {
+    return request({
+      url: `/warning/rule/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  /** 更新预警规则状态 */
+  updateWarningRuleStatus(id, data) {
+    return request({
+      url: `/warning/rule/status/${id}`,
+      method: 'put',
+      data
+    })
+  },
+  
+  // ========== 监测参数 ==========
+  
+  /** 获取所有监测参数 */
+  getAllParameters() {
+    return request({
+      url: '/monitoring/parameter/all',
+      method: 'get'
+    })
+  },
+  
+  /** 获取监测参数列表（分页） */
+  getParameters(params) {
+    return request({
+      url: '/monitoring/parameter/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取监测参数列表（分页）- 别名方法 */
+  getParameterList(params) {
+    return request({
+      url: '/monitoring/parameter/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 根据ID获取监测参数详情 */
+  getParameterById(id) {
+    return request({
+      url: `/monitoring/parameter/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 添加监测参数 */
+  addParameter(data) {
+    return request({
+      url: '/monitoring/parameter',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新监测参数 */
+  updateParameter(data) {
+    return request({
+      url: '/monitoring/parameter',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除监测参数 */
+  deleteParameter(id) {
+    return request({
+      url: `/monitoring/parameter/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  // ========== 统计分析 ==========
+  
+  /** 获取监测统计概览数据 */
+  getMonitoringStatistics() {
+    return request({
+      url: '/monitoring/statistics/overview',
+      method: 'get'
+    })
+  },
+  
+  /** 获取预警趋势数据 */
+  getWarningTrend(timeRange) {
+    return request({
+      url: '/monitoring/statistics/warning-trend',
+      method: 'get',
+      params: { timeRange }
+    })
+  },
+  
+  /** 获取危化品预警排名 */
+  getHazmatRank() {
+    return request({
+      url: '/monitoring/statistics/hazmat-rank',
+      method: 'get'
+    })
+  },
+  
+  /** 获取参数预警分布 */
+  getParamDistribution() {
+    return request({
+      url: '/monitoring/statistics/param-distribution',
+      method: 'get'
+    })
+  },
+  
+  /** 获取预警级别分布 */
+  getLevelDistribution() {
+    return request({
+      url: '/monitoring/statistics/level-distribution',
+      method: 'get'
+    })
+  },
+  
+  /** 获取主要统计数据 */
+  getMainStatistics(params) {
+    return request({
+      url: '/monitoring/statistics/main',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取预警级别统计 */
+  getLevelStatistics(params) {
+    return request({
+      url: '/monitoring/statistics/level',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取预警趋势统计 */
+  getTrendStatistics(params) {
+    return request({
+      url: '/monitoring/statistics/trend',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取危化品排名统计 */
+  getHazmatRankStatistics(params) {
+    return request({
+      url: '/monitoring/statistics/hazmat-rank',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取预警类型统计 */
+  getTypeStatistics(params) {
+    return request({
+      url: '/monitoring/statistics/type',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取处理效率统计 */
+  getEfficiencyStatistics(params) {
+    return request({
+      url: '/monitoring/statistics/efficiency',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取处理详情 */
+  getHandleDetail(params) {
+    return request({
+      url: '/monitoring/statistics/handle-detail',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 导出统计数据 */
+  exportStatistics(params) {
+    return request({
+      url: '/monitoring/statistics/export',
+      method: 'get',
+      params,
+      responseType: 'blob'
+    })
+  }
+}
+
+// ==================== 危化品管理 API ====================
+
+export const hazmatApi = {
+  /** 获取所有危化品列表 */
+  getAllHazmats() {
+    return request({
+      url: '/hazmat/info/all',
+      method: 'get'
+    })
+  },
+  
+  /** 获取危化品详情 */
+  getHazmatById(id) {
+    return request({
+      url: `/hazmat/info/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 分页查询危化品 */
+  getHazmatPage(params) {
+    return request({
+      url: '/hazmat/info/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 创建危化品 */
+  createHazmat(data) {
+    return request({
+      url: '/hazmat/info',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新危化品 */
+  updateHazmat(data) {
+    return request({
+      url: '/hazmat/info',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除危化品 */
+  deleteHazmat(id) {
+    return request({
+      url: `/hazmat/info/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  /** 获取危化品分类列表 */
+  getCategories() {
+    return request({
+      url: '/hazmat/category/all',
+      method: 'get'
+    })
+  },
+  
+  /** 分页查询分类 */
+  getCategoryPage(params) {
+    return request({
+      url: '/hazmat/category/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取分类详情 */
+  getCategoryById(id) {
+    return request({
+      url: `/hazmat/category/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 创建分类 */
+  createCategory(data) {
+    return request({
+      url: '/hazmat/category',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新分类 */
+  updateCategory(data) {
+    return request({
+      url: '/hazmat/category',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除分类 */
+  deleteCategory(id) {
+    return request({
+      url: `/hazmat/category/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  /** 统计危化品数量 */
+  countHazmats() {
+    return request({
+      url: '/hazmat/count',
+      method: 'get'
+    })
+  },
+  
+  /** 按类别统计 */
+  countByCategory() {
+    return request({
+      url: '/hazmat/count-by-category',
+      method: 'get'
+    })
+  }
+}
+
+// ==================== 隐患管理 API ====================
+
+export const hazardApi = {
+  /** 获取隐患列表 */
+  getHazardList(params) {
+    return request({
+      url: '/hazard/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取隐患详情 */
+  getHazardById(id) {
+    return request({
+      url: `/hazard/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 上报隐患 */
+  reportHazard(data) {
+    return request({
+      url: '/hazard',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 处理隐患 */
+  handleHazard(id, data) {
+    return request({
+      url: `/hazard/handle/${id}`,
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除隐患 */
+  deleteHazard(id) {
+    return request({
+      url: `/hazard/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  /** 获取我的隐患 */
+  getMyHazards(params) {
+    return request({
+      url: '/hazard/my',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取待处理隐患 */
+  getPendingHazards() {
+    return request({
+      url: '/hazard/pending',
+      method: 'get'
+    })
+  }
+}
+
+// ==================== 安全检查 API ====================
+
+export const checkApi = {
+  /** 获取检查计划列表 */
+  getPlanList(params) {
+    return request({
+      url: '/check/plan/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取检查计划详情 */
+  getPlanById(id) {
+    return request({
+      url: `/check/plan/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 创建检查计划 */
+  createPlan(data) {
+    return request({
+      url: '/check/plan',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新检查计划 */
+  updatePlan(data) {
+    return request({
+      url: '/check/plan',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除检查计划 */
+  deletePlan(id) {
+    return request({
+      url: `/check/plan/${id}`,
+      method: 'delete'
+    })
+  },
+  
+  /** 获取待执行检查计划 */
+  getPendingPlans() {
+    return request({
+      url: '/check/plan/pending',
+      method: 'get'
+    })
+  },
+  
+  /** 获取检查记录列表 */
+  getRecordList(params) {
+    return request({
+      url: '/check/record/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 提交检查记录 */
+  submitRecord(data) {
+    return request({
+      url: '/check/record',
+      method: 'post',
+      data
+    })
+  }
+}
+
+// ==================== 安全知识 API ====================
+
+export const knowledgeApi = {
+  /** 获取知识列表 */
+  getKnowledgeList(params) {
+    return request({
+      url: '/knowledge/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取知识详情 */
+  getKnowledgeById(id) {
+    return request({
+      url: `/knowledge/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 创建知识 */
+  createKnowledge(data) {
+    return request({
+      url: '/knowledge',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新知识 */
+  updateKnowledge(data) {
+    return request({
+      url: '/knowledge',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除知识 */
+  deleteKnowledge(id) {
+    return request({
+      url: `/knowledge/${id}`,
+      method: 'delete'
+    })
+  }
+}
+
+// ==================== 公告管理 API ====================
+
+export const announcementApi = {
+  /** 获取公告列表 */
+  getAnnouncementList(params) {
+    return request({
+      url: '/announcement/list',
+      method: 'get',
+      params
+    })
+  },
+  
+  /** 获取公告详情 */
+  getAnnouncementById(id) {
+    return request({
+      url: `/announcement/${id}`,
+      method: 'get'
+    })
+  },
+  
+  /** 创建公告 */
+  createAnnouncement(data) {
+    return request({
+      url: '/announcement',
+      method: 'post',
+      data
+    })
+  },
+  
+  /** 更新公告 */
+  updateAnnouncement(data) {
+    return request({
+      url: '/announcement',
+      method: 'put',
+      data
+    })
+  },
+  
+  /** 删除公告 */
+  deleteAnnouncement(id) {
+    return request({
+      url: `/announcement/${id}`,
+      method: 'delete'
+    })
+  }
+}
+
+export default {
+  authApi,
+  userApi,
+  dashboardApi,
+  monitoringApi,
+  hazmatApi,
+  hazardApi,
+  checkApi,
+  knowledgeApi,
+  announcementApi
 }

@@ -54,14 +54,21 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login", "/auth/register", "/auth/logout").permitAll()
                 // Swagger文档
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                // 静态资源
-                .requestMatchers("/uploads/**").permitAll()
+                // 静态资源和错误路径
+                .requestMatchers("/uploads/**", "/error").permitAll()
                 // 公开的查询接口
                 .requestMatchers("/announcement/published/**", "/announcement/latest", "/announcement/intro").permitAll()
                 .requestMatchers("/knowledge/published/**", "/knowledge/hot", "/knowledge/latest").permitAll()
                 .requestMatchers("/dashboard/**").permitAll()
                 // 其他接口需要认证
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("{\"code\":401,\"message\":\"未授权或登录已过期\",\"data\":null}");
+                })
             )
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

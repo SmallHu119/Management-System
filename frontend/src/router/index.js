@@ -169,6 +169,45 @@ const routes = [
             meta: { title: '安全管理员' }
           }
         ]
+      },
+      // 风险监测与预警
+      {
+        path: 'monitoring',
+        name: 'Monitoring',
+        redirect: '/monitoring/realtime',
+        meta: { title: '风险监测与预警', icon: 'Monitor', roles: ['admin', 'safety_admin'] },
+        children: [
+          {
+            path: 'parameter',
+            name: 'MonitoringParameter',
+            component: () => import('@/views/monitoring/ParameterList.vue'),
+            meta: { title: '监测参数管理', roles: ['admin'] }
+          },
+          {
+            path: 'warning-rule',
+            name: 'WarningRule',
+            component: () => import('@/views/monitoring/WarningRules.vue'),
+            meta: { title: '预警规则配置', roles: ['admin', 'safety_admin'] }
+          },
+          {
+            path: 'realtime',
+            name: 'RealTimeMonitoring',
+            component: () => import('@/views/monitoring/MonitoringData.vue'),
+            meta: { title: '实时监测数据' }
+          },
+          {
+            path: 'warning-record',
+            name: 'WarningRecord',
+            component: () => import('@/views/monitoring/WarningRecords.vue'),
+            meta: { title: '预警记录管理' }
+          },
+          {
+            path: 'statistics',
+            name: 'MonitoringStatistics',
+            component: () => import('@/views/monitoring/MonitoringStatistics.vue'),
+            meta: { title: '监测统计分析', roles: ['admin', 'safety_admin'] }
+          }
+        ]
       }
     ]
   },
