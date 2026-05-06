@@ -298,7 +298,7 @@ const categoryList = ref([])
 
 // 表单数据
 const searchForm = reactive({
-  timeRange: '30d',
+  timeRange: '90d',
   categoryId: null,
   warningLevel: []
 })

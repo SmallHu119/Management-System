@@ -88,6 +88,100 @@ export const userApi = {
       url: `/user/${id}`,
       method: 'delete'
     })
+  },
+
+  /** 修改员工状态 */
+  updateUserStatus(id, status) {
+    return request({
+      url: `/user/${id}/status/${status}`,
+      method: 'put'
+    })
+  },
+
+  /** 重置员工密码 */
+  resetUserPassword(id, newPassword) {
+    return request({
+      url: `/user/${id}/reset-password`,
+      method: 'put',
+      params: { newPassword }
+    })
+  },
+
+  /** 获取安全管理员列表 */
+  getSafetyAdminList(params) {
+    return request({
+      url: '/user/safety-admin/list',
+      method: 'get',
+      params
+    })
+  },
+
+  /** 获取安全管理员详情 */
+  getSafetyAdminById(id) {
+    return request({
+      url: `/user/safety-admin/${id}`,
+      method: 'get'
+    })
+  },
+
+  /** 添加安全管理员 */
+  addSafetyAdmin(data) {
+    return request({
+      url: '/user/safety-admin',
+      method: 'post',
+      data
+    })
+  },
+
+  /** 更新安全管理员 */
+  updateSafetyAdmin(data) {
+    return request({
+      url: '/user/safety-admin',
+      method: 'put',
+      data
+    })
+  },
+
+  /** 删除安全管理员 */
+  deleteSafetyAdmin(id) {
+    return request({
+      url: `/user/safety-admin/${id}`,
+      method: 'delete'
+    })
+  },
+
+  /** 修改安全管理员状态 */
+  updateSafetyAdminStatus(id, status) {
+    return request({
+      url: `/user/safety-admin/${id}/status/${status}`,
+      method: 'put'
+    })
+  },
+
+  /** 重置安全管理员密码 */
+  resetSafetyAdminPassword(id, newPassword) {
+    return request({
+      url: `/user/safety-admin/${id}/reset-password`,
+      method: 'put',
+      params: { newPassword }
+    })
+  },
+
+  /** 获取系统管理员详情 */
+  getAdminById(id) {
+    return request({
+      url: `/user/admin/${id}`,
+      method: 'get'
+    })
+  },
+
+  /** 更新系统管理员 */
+  updateAdmin(data) {
+    return request({
+      url: '/user/admin',
+      method: 'put',
+      data
+    })
   }
 }
 
@@ -577,6 +671,15 @@ export const hazmatApi = {
       method: 'get'
     })
   },
+
+  /** 分页查询危化品（HazmatList.vue 使用） */
+  getHazmatList(params) {
+    return request({
+      url: '/hazmat/info/list',
+      method: 'get',
+      params
+    })
+  },
   
   /** 获取危化品详情 */
   getHazmatById(id) {
@@ -603,6 +706,15 @@ export const hazmatApi = {
       data
     })
   },
+
+  /** 添加危化品（HazmatList.vue 使用） */
+  addHazmat(data) {
+    return request({
+      url: '/hazmat/info',
+      method: 'post',
+      data
+    })
+  },
   
   /** 更新危化品 */
   updateHazmat(data) {
@@ -621,8 +733,24 @@ export const hazmatApi = {
     })
   },
   
+  /** 获取所有危化品分类（HazmatList.vue 使用） */
+  getAllCategories() {
+    return request({
+      url: '/hazmat/category/all',
+      method: 'get'
+    })
+  },
+
   /** 获取危化品分类列表 */
   getCategories() {
+    return request({
+      url: '/hazmat/category/all',
+      method: 'get'
+    })
+  },
+
+  /** 获取危化品类别列表（MonitoringStatistics.vue 使用） */
+  getHazmatCategories() {
     return request({
       url: '/hazmat/category/all',
       method: 'get'
@@ -652,6 +780,24 @@ export const hazmatApi = {
       url: '/hazmat/category',
       method: 'post',
       data
+    })
+  },
+
+  /** 添加分类（CategoryList.vue 使用） */
+  addCategory(data) {
+    return request({
+      url: '/hazmat/category',
+      method: 'post',
+      data
+    })
+  },
+
+  /** 获取分类分页列表（CategoryList.vue 使用） */
+  getCategoryList(params) {
+    return request({
+      url: '/hazmat/category/list',
+      method: 'get',
+      params
     })
   },
   
@@ -781,6 +927,15 @@ export const checkApi = {
       data
     })
   },
+
+  /** 添加检查计划（PlanList.vue 使用） */
+  addPlan(data) {
+    return request({
+      url: '/check/plan',
+      method: 'post',
+      data
+    })
+  },
   
   /** 更新检查计划 */
   updatePlan(data) {
@@ -788,6 +943,14 @@ export const checkApi = {
       url: '/check/plan',
       method: 'put',
       data
+    })
+  },
+
+  /** 更新计划状态（PlanList.vue 使用） */
+  updatePlanStatus(id, status) {
+    return request({
+      url: `/check/plan/${id}/status/${status}`,
+      method: 'put'
     })
   },
   
@@ -823,6 +986,31 @@ export const checkApi = {
       method: 'post',
       data
     })
+  },
+
+  /** 添加检查记录（PlanList.vue 使用） */
+  addRecord(data) {
+    return request({
+      url: '/check/record',
+      method: 'post',
+      data
+    })
+  },
+
+  /** 删除检查记录（RecordList.vue 使用） */
+  deleteRecord(id) {
+    return request({
+      url: `/check/record/${id}`,
+      method: 'delete'
+    })
+  },
+
+  /** 审核检查记录（RecordList.vue 使用） */
+  auditRecord(id, status) {
+    return request({
+      url: `/check/record/${id}/audit/${status}`,
+      method: 'put'
+    })
   }
 }
 
@@ -833,6 +1021,15 @@ export const knowledgeApi = {
   getKnowledgeList(params) {
     return request({
       url: '/knowledge/list',
+      method: 'get',
+      params
+    })
+  },
+
+  /** 获取已发布的知识列表（员工端 KnowledgeList.vue 使用） */
+  getPublishedKnowledge(params) {
+    return request({
+      url: '/knowledge/published',
       method: 'get',
       params
     })
@@ -854,6 +1051,15 @@ export const knowledgeApi = {
       data
     })
   },
+
+  /** 添加知识（KnowledgeManage.vue 使用） */
+  addKnowledge(data) {
+    return request({
+      url: '/knowledge',
+      method: 'post',
+      data
+    })
+  },
   
   /** 更新知识 */
   updateKnowledge(data) {
@@ -861,6 +1067,14 @@ export const knowledgeApi = {
       url: '/knowledge',
       method: 'put',
       data
+    })
+  },
+
+  /** 发布/取消发布知识（KnowledgeManage.vue 使用） */
+  publishKnowledge(id, status) {
+    return request({
+      url: `/knowledge/${id}/publish/${status}`,
+      method: 'put'
     })
   },
   
@@ -901,6 +1115,15 @@ export const announcementApi = {
       data
     })
   },
+
+  /** 添加公告（AnnouncementList.vue 使用） */
+  addAnnouncement(data) {
+    return request({
+      url: '/announcement',
+      method: 'post',
+      data
+    })
+  },
   
   /** 更新公告 */
   updateAnnouncement(data) {
@@ -908,6 +1131,14 @@ export const announcementApi = {
       url: '/announcement',
       method: 'put',
       data
+    })
+  },
+
+  /** 发布/取消发布公告（AnnouncementList.vue 使用） */
+  publishAnnouncement(id, status) {
+    return request({
+      url: `/announcement/${id}/publish/${status}`,
+      method: 'put'
     })
   },
   

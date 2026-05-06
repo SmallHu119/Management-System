@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,5 +37,15 @@ public class PageResult<T> {
 
     public static <T> PageResult<T> of(IPage<T> page) {
         return new PageResult<>(page);
+    }
+
+    public static <T> PageResult<T> empty() {
+        PageResult<T> result = new PageResult<>();
+        result.setRecords(Collections.emptyList());
+        result.setTotal(0L);
+        result.setSize(10L);
+        result.setCurrent(1L);
+        result.setPages(0L);
+        return result;
     }
 }

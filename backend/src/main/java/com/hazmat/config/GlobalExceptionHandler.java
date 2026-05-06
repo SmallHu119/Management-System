@@ -2,7 +2,9 @@ package com.hazmat.config;
 
 import com.hazmat.common.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -64,6 +68,29 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Result<String> handleAccessDeniedException(AccessDeniedException e) {
         return Result.forbidden("没有访问权限");
+    }
+
+    /**
+     * 处理SQL语法异常（表不存在等）—— 返回空数据而非500
+     */
+    @ExceptionHandler(BadSqlGrammarException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<Object> handleBadSqlGrammarException(BadSqlGrammarException e) {
+        log.warn("数据库表不存在或SQL语法错误：{}", e.getMessage());
+        Map<String, Object> emptyPage = new HashMap<>();
+        emptyPage.put("records", List.of());
+        emptyPage.put("total", 0);
+        return Result.success(emptyPage);
+    }
+
+    /**
+     * 处理数据访问异常—— 返回空数据而非500
+     */
+    @ExceptionHandler(DataAccessException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<Object> handleDataAccessException(DataAccessException e) {
+        log.warn("数据访问异常：{}", e.getMessage());
+        return Result.success(new HashMap<>());
     }
 
     /**

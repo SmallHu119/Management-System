@@ -12,6 +12,7 @@ import com.hazmat.service.WarningRecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import java.util.Map;
  * 状态定义: 0-未处理, 1-处理中, 2-已解决, 3-已忽略
  */
 @Tag(name = "预警记录管理", description = "危化品预警记录管理接口")
+@Slf4j
 @RestController
 @RequestMapping("/warning/record")
 @RequiredArgsConstructor
@@ -36,9 +38,14 @@ public class WarningRecordController {
     @Operation(summary = "获取所有预警记录")
     @GetMapping("/all")
     public Result<List<WarningRecord>> getAllRecords() {
-        List<WarningRecord> records = warningRecordService.list();
-        enrichWarningRecords(records);
-        return Result.success(records);
+        try {
+            List<WarningRecord> records = warningRecordService.list();
+            enrichWarningRecords(records);
+            return Result.success(records);
+        } catch (Exception e) {
+            log.warn("查询预警记录失败", e);
+            return Result.success(java.util.Collections.emptyList());
+        }
     }
 
     @Operation(summary = "分页查询预警记录")
@@ -52,35 +59,38 @@ public class WarningRecordController {
             @RequestParam(required = false) String handlerName,
             @RequestParam(required = false) LocalDateTime startTime,
             @RequestParam(required = false) LocalDateTime endTime) {
-        Page<WarningRecord> page = new Page<>(pageNum, pageSize);
-        QueryWrapper<WarningRecord> queryWrapper = new QueryWrapper<>();
-        
-        if (hazmatId != null) {
-            queryWrapper.eq("hazmat_id", hazmatId);
+        try {
+            Page<WarningRecord> page = new Page<>(pageNum, pageSize);
+            QueryWrapper<WarningRecord> queryWrapper = new QueryWrapper<>();
+            
+            if (hazmatId != null) {
+                queryWrapper.eq("hazmat_id", hazmatId);
+            }
+            if (warningLevel != null && !warningLevel.isEmpty()) {
+                queryWrapper.eq("warning_level", warningLevel);
+            }
+            if (status != null) {
+                queryWrapper.eq("status", status);
+            }
+            if (handlerName != null && !handlerName.isEmpty()) {
+                queryWrapper.eq("handler_name", handlerName);
+            }
+            if (startTime != null) {
+                queryWrapper.ge("create_time", startTime);
+            }
+            if (endTime != null) {
+                queryWrapper.le("create_time", endTime);
+            }
+            
+            queryWrapper.orderByDesc("create_time");
+            
+            IPage<WarningRecord> result = warningRecordService.page(page, queryWrapper);
+            enrichWarningRecords(result.getRecords());
+            return Result.success(PageResult.of(result));
+        } catch (Exception e) {
+            log.warn("分页查询预警记录失败", e);
+            return Result.success(PageResult.empty());
         }
-        if (warningLevel != null && !warningLevel.isEmpty()) {
-            queryWrapper.eq("warning_level", warningLevel);
-        }
-        if (status != null) {
-            queryWrapper.eq("status", status);
-        }
-        if (handlerName != null && !handlerName.isEmpty()) {
-            queryWrapper.eq("handler_name", handlerName);
-        }
-        if (startTime != null) {
-            queryWrapper.ge("create_time", startTime);
-        }
-        if (endTime != null) {
-            queryWrapper.le("create_time", endTime);
-        }
-        
-        // 按预警时间倒序
-        queryWrapper.orderByDesc("create_time");
-        
-        IPage<WarningRecord> result = warningRecordService.page(page, queryWrapper);
-        // 补全危化品名称
-        enrichWarningRecords(result.getRecords());
-        return Result.success(PageResult.of(result));
     }
 
     @Operation(summary = "获取未处理的预警记录")

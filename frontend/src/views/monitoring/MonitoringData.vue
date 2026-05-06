@@ -384,8 +384,7 @@ const formRules = {
     { required: true, message: '请选择监测参数', trigger: 'change' }
   ],
   paramValue: [
-    { required: true, message: '请输入参数值', trigger: 'blur' },
-    { min: 0, message: '参数值不能为负数', trigger: 'blur' }
+    { required: true, message: '请输入参数值', trigger: 'blur' }
   ],
   dataSource: [
     { required: true, message: '请选择数据来源', trigger: 'change' }

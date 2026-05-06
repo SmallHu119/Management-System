@@ -14,6 +14,7 @@ import com.hazmat.service.RealTimeMonitoringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import java.util.Map;
  * 实时监测数据管理控制器
  */
 @Tag(name = "实时监测管理", description = "危化品实时监测数据管理接口")
+@Slf4j
 @RestController
 @RequestMapping("/monitoring/realtime")
 @RequiredArgsConstructor
@@ -64,32 +66,35 @@ public class RealTimeMonitoringController {
             @RequestParam(required = false) Integer status,
             @RequestParam(required = false) LocalDateTime startTime,
             @RequestParam(required = false) LocalDateTime endTime) {
-        Page<RealTimeMonitoring> page = new Page<>(pageNum, pageSize);
-        QueryWrapper<RealTimeMonitoring> queryWrapper = new QueryWrapper<>();
-        
-        if (hazmatId != null) {
-            queryWrapper.eq("hazmat_id", hazmatId);
+        try {
+            Page<RealTimeMonitoring> page = new Page<>(pageNum, pageSize);
+            QueryWrapper<RealTimeMonitoring> queryWrapper = new QueryWrapper<>();
+            
+            if (hazmatId != null) {
+                queryWrapper.eq("hazmat_id", hazmatId);
+            }
+            if (paramId != null) {
+                queryWrapper.eq("param_id", paramId);
+            }
+            if (status != null) {
+                queryWrapper.eq("status", status);
+            }
+            if (startTime != null) {
+                queryWrapper.ge("monitor_time", startTime);
+            }
+            if (endTime != null) {
+                queryWrapper.le("monitor_time", endTime);
+            }
+            
+            queryWrapper.orderByDesc("monitor_time");
+            
+            IPage<RealTimeMonitoring> result = realTimeMonitoringService.page(page, queryWrapper);
+            enrichMonitoringData(result.getRecords());
+            return Result.success(PageResult.of(result));
+        } catch (Exception e) {
+            log.warn("查询实时监测数据失败", e);
+            return Result.success(PageResult.empty());
         }
-        if (paramId != null) {
-            queryWrapper.eq("param_id", paramId);
-        }
-        if (status != null) {
-            queryWrapper.eq("status", status);
-        }
-        if (startTime != null) {
-            queryWrapper.ge("monitor_time", startTime);
-        }
-        if (endTime != null) {
-            queryWrapper.le("monitor_time", endTime);
-        }
-        
-        // 按监测时间倒序
-        queryWrapper.orderByDesc("monitor_time");
-        
-        IPage<RealTimeMonitoring> result = realTimeMonitoringService.page(page, queryWrapper);
-        // 补全危化品名称、参数名称和单位
-        enrichMonitoringData(result.getRecords());
-        return Result.success(PageResult.of(result));
     }
 
     @Operation(summary = "获取危化品最新监测数据")
