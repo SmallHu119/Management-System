@@ -1151,6 +1151,27 @@ export const announcementApi = {
   }
 }
 
+// ==================== AI助手 API ====================
+
+export const aiApi = {
+  /** AI对话 */
+  chat(message) {
+    return request({
+      url: '/ai/chat',
+      method: 'post',
+      data: { message }
+    })
+  },
+
+  /** 清除对话历史 */
+  clearHistory() {
+    return request({
+      url: '/ai/history',
+      method: 'delete'
+    })
+  }
+}
+
 export default {
   authApi,
   userApi,
@@ -1160,5 +1181,6 @@ export default {
   hazardApi,
   checkApi,
   knowledgeApi,
-  announcementApi
+  announcementApi,
+  aiApi
 }

@@ -1,6 +1,7 @@
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\mapper\CheckPlanMapper.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\common\UserRole.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\controller\MonitoringStatisticsController.java
+C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\controller\AiAssistantController.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\service\HazardWarningRuleService.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\mapper\WarningRecordMapper.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\controller\MonitoringParameterController.java
@@ -20,6 +21,7 @@ C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\mapper\HazardWarni
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\util\JwtUtil.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\service\impl\HazardWarningRuleServiceImpl.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\service\impl\WarningRecordServiceImpl.java
+C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\dto\AiChatRequest.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\controller\WarningRecordController.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\dto\LoginRequest.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\controller\HazardWarningRuleController.java
@@ -58,6 +60,7 @@ C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\common\Result.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\service\CheckService.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\config\MybatisPlusConfig.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\entity\HazmatCategory.java
+C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\service\AiAssistantService.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\controller\RealTimeMonitoringController.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\common\PageResult.java
 C:\Users\sunfei\Desktop\论文\backend\src\main\java\com\hazmat\entity\SysAdmin.java

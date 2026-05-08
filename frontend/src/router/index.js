@@ -208,6 +208,13 @@ const routes = [
             meta: { title: '监测统计分析', roles: ['admin', 'safety_admin'] }
           }
         ]
+      },
+      // AI助手
+      {
+        path: 'ai-assistant',
+        name: 'AiAssistant',
+        component: () => import('@/views/ai/AiAssistant.vue'),
+        meta: { title: 'AI助手', icon: 'Cpu' }
       }
     ]
   },
